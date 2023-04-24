@@ -1,0 +1,28 @@
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  margin-top: 40px;
+  /* display: flex;
+  flex-direction: column;
+  align-items: center; */
+  /* place-items: center; */
+  /* min-width: 320px;
+  min-height: 100vh; */
+  /* width: 100%;
+  height: 100%; */
+  background-color: #cfd8dc;
+  font-family: "Roboto", sans-serif;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* background-color: red; */
+}
+
+.Header {
+  /* background-color: blue; */
+  display: flex;
+}
