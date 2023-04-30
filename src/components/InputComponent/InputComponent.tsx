@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 // import DeleteIcon from "@mui/icons-material/Delete";
 import { v4 as uuidv4 } from "uuid";
@@ -9,26 +9,31 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Button } from "@mui/material";
+import useLocalStorage from "../../hooks/useLocalStorage/useLocalStorage";
 
 const StyledInput = styled.input`
   background-color: white;
   width: 300px;
-  flex: 1;
   margin-bottom: 20px;
   margin-right: 5px;
   border-radius: 3px;
   height: 28px;
+  &:focus {
+    border: 3px solid #0277BD;
+    outline: none;
+  }
 `;
 const StyledDiv = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
 `;
 const StyledLabel = styled.label`
   font-weight: bold;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 `;
 const StyledSpan = styled.span`
-  width: 350px;
+  width: 450px;
   font-family: roboto;
 
   overflow: hidden;
@@ -36,6 +41,7 @@ const StyledSpan = styled.span`
 const StyledDivRender = styled.div`
   display: flex;
   align-items: center;
+  margin-bottom: 5px;
 `;
 // const StyledIconSpan = styled.span`
 //   margin-left: 5px;
@@ -49,18 +55,20 @@ const StyledButton = styled.button`
   width: 35px;
 `;
 const StyledClearButton = styled.button`
-  border-radius: 7.5%;
+  border-radius: 5px;
   background-color: #b0bec5;
   font-family: roboto;
   width: 130px;
   margin-bottom: 15px;
 `;
 const InputComponent = () => {
+  // console.log('rendering')
   interface Task {
     id: string;
     name: string;
   }
-  const [tasks, setTasks] = useState<Task[]>([]);
+  // const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useLocalStorage<Task[]>('tasks', [])
   const [inputedTask, setInputedTask] = useState("");
   const [open, setOpen] = useState(false);
   const [checkedTasks, setCheckedTasks] = useState<boolean[]>(
@@ -100,22 +108,24 @@ const InputComponent = () => {
   return (
     <>
       <StyledDiv>
-        <StyledLabel htmlFor="task">Type a task you have to do:</StyledLabel>
         <div>
-          <StyledInput
-            value={inputedTask}
-            id="task"
-            type="text"
-            onChange={handleChange}
-            onKeyPress={handleKeyPress}
-          />
-          <StyledButton
-            style={{ fontWeight: "bold" }}
-            onClick={handleClick}
-            type="submit"
-          >
-            OK
-          </StyledButton>
+          <StyledLabel htmlFor="task">Type a task you have to do:</StyledLabel>
+          <div>
+            <StyledInput
+              value={inputedTask}
+              id="task"
+              type="text"
+              onChange={handleChange}
+              onKeyPress={handleKeyPress}
+            />
+            <StyledButton
+              style={{ fontWeight: "bold" }}
+              onClick={handleClick}
+              type="submit"
+            >
+              OK
+            </StyledButton>
+          </div>
         </div>
         {tasks.length > 0 && (
           <div style={{ display: "flex", justifyContent: "center" }}>
@@ -129,8 +139,9 @@ const InputComponent = () => {
         )}
         <ul style={{ listStyle: "none", margin: "0", padding: "0" }}>
           {tasks.map((task, index) => (
-            <li>
-              <StyledDivRender key={task.id}>
+            <li key={task.id}>
+              <StyledDivRender>
+
                 <Checkbox
                   checked={checkedTasks[index]}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -138,9 +149,10 @@ const InputComponent = () => {
                     newCheckedTasks[index] = event.target.checked;
                     setCheckedTasks(newCheckedTasks);
                   }}
-                  style={{ paddingLeft: "0" }}
                   color="default"
                 />
+
+
                 <StyledSpan
                   style={{
                     textShadow: "10px 2px 4px rgba(0, 0, 0, 0.1)",
@@ -148,6 +160,7 @@ const InputComponent = () => {
                     textDecoration: checkedTasks[index]
                       ? "line-through"
                       : "none",
+                    wordWrap: "break-word"
                   }}
                 >
                   {task.name}
